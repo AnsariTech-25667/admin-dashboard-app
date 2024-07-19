@@ -1,19 +1,16 @@
 // Import necessary dependencies
 import React, { useState } from 'react';
 import axios from 'axios';
-import styles from './SendNotification.module.css'; // Assuming you are using CSS modules
+import styles from './SendNotification.module.css'; 
 
 const SendNotification = () => {
-  // State to manage notification form data and submission status
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState(null);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Construct notification object
     const newNotification = {
       title,
       message,
@@ -21,7 +18,6 @@ const SendNotification = () => {
     };
 
     try {
-      // Send notification data to the server
       await axios.post('/api/notifications', newNotification);
       setStatus('Notification sent successfully!');
       setTitle('');
