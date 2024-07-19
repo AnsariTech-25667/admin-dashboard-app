@@ -1,16 +1,13 @@
-// Import necessary dependencies
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from './Home.module.css'; // Assuming you are using CSS modules
+import styles from './Home.module.css'; 
 import Link from 'next/link';
 
 const Home = () => {
-  // State to manage data and loading state
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch data from server on component mount
     const fetchData = async () => {
       try {
         const response = await axios.get('/api/home');
