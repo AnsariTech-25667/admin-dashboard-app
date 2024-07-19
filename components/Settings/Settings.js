@@ -1,125 +1,89 @@
+// Import necessary dependencies
 import React, { useState, useEffect } from 'react';
-import { Card, Text, Switch, Select, Button, Input, Spacer } from '@nextui-org/react';
-import { toast } from 'react-toastify';
 import axios from 'axios';
+import styles from './Settings.module.css'; // Assuming you are using CSS modules
 
 const Settings = () => {
+  // State to manage user settings and loading state
   const [settings, setSettings] = useState({
-    darkMode: false,
+    theme: 'light',
     notifications: true,
-    language: 'en',
-    timezone: 'UTC',
-    emailFrequency: 'daily',
-    twoFactorAuth: false,
   });
-
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState(null);
 
   useEffect(() => {
+    // Fetch user settings from server on component mount
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get('/api/settings');
+        setSettings(response.data);
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchSettings();
   }, []);
 
-  const fetchSettings = async () => {
+  // Handle settings form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
     try {
-      setLoading(true);
-      const response = await axios.get('/api/settings');
-      setSettings(response.data);
+      // Send updated settings to the server
+      await axios.put('/api/settings', settings);
+      setStatus('Settings updated successfully!');
     } catch (error) {
-      console.error('Error fetching settings:', error);
-      toast.error('Failed to load settings');
-    } finally {
-      setLoading(false);
+      console.error('Error updating settings:', error);
+      setStatus('Error updating settings. Please try again.');
     }
   };
 
-  const updateSetting = async (key, value) => {
-    try {
-      setLoading(true);
-      await axios.patch('/api/settings', { [key]: value });
-      setSettings(prev => ({ ...prev, [key]: value }));
-      toast.success('Setting updated successfully');
-    } catch (error) {
-      console.error('Error updating setting:', error);
-      toast.error('Failed to update setting');
-    } finally {
-      setLoading(false);
-    }
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setSettings(prevSettings => ({
+      ...prevSettings,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
-
-  const handleChange = (key, value) => {
-    updateSetting(key, value);
-  };
-
-  if (loading) {
-    return <Text>Loading settings...</Text>;
-  }
 
   return (
-    <Card css={{ mw: '600px', p: '$6' }}>
-      <Text h3>Settings</Text>
-      <Spacer y={1} />
-      
-      <Text h4>Appearance</Text>
-      <Switch
-        checked={settings.darkMode}
-        onChange={(e) => handleChange('darkMode', e.target.checked)}
-        label="Dark Mode"
-      />
-      <Spacer y={1} />
-
-      <Text h4>Notifications</Text>
-      <Switch
-        checked={settings.notifications}
-        onChange={(e) => handleChange('notifications', e.target.checked)}
-        label="Enable Notifications"
-      />
-      <Spacer y={1} />
-
-      <Text h4>Language</Text>
-      <Select
-        value={settings.language}
-        onChange={(e) => handleChange('language', e.target.value)}
-      >
-        <Select.Option value="en">English</Select.Option>
-        <Select.Option value="es">Español</Select.Option>
-        <Select.Option value="fr">Français</Select.Option>
-      </Select>
-      <Spacer y={1} />
-
-      <Text h4>Timezone</Text>
-      <Select
-        value={settings.timezone}
-        onChange={(e) => handleChange('timezone', e.target.value)}
-      >
-        <Select.Option value="UTC">UTC</Select.Option>
-        <Select.Option value="EST">EST</Select.Option>
-        <Select.Option value="PST">PST</Select.Option>
-      </Select>
-      <Spacer y={1} />
-
-      <Text h4>Email Frequency</Text>
-      <Select
-        value={settings.emailFrequency}
-        onChange={(e) => handleChange('emailFrequency', e.target.value)}
-      >
-        <Select.Option value="daily">Daily</Select.Option>
-        <Select.Option value="weekly">Weekly</Select.Option>
-        <Select.Option value="monthly">Monthly</Select.Option>
-      </Select>
-      <Spacer y={1} />
-
-      <Text h4>Security</Text>
-      <Switch
-        checked={settings.twoFactorAuth}
-        onChange={(e) => handleChange('twoFactorAuth', e.target.checked)}
-        label="Enable Two-Factor Authentication"
-      />
-      <Spacer y={2} />
-
-      <Button onClick={fetchSettings}>
-        Refresh Settings
-      </Button>
-    </Card>
+    <div className={styles.container}>
+      <h1>Settings</h1>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.field}>
+            <label htmlFor="theme">Theme</label>
+            <select
+              id="theme"
+              name="theme"
+              value={settings.theme}
+              onChange={handleChange}
+            >
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div className={styles.field}>
+            <label htmlFor="notifications">Enable Notifications</label>
+            <input
+              type="checkbox"
+              id="notifications"
+              name="notifications"
+              checked={settings.notifications}
+              onChange={handleChange}
+            />
+          </div>
+          <button type="submit" className={styles.button}>Save</button>
+          {status && <p className={styles.status}>{status}</p>}
+        </form>
+      )}
+    </div>
   );
 };
 
