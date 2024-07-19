@@ -1,10 +1,8 @@
-// components/Analytics/Analytics.js
 import React from 'react';
-import { Card, Text } from '@nextui-org/react'; // Example of Next UI components
-import { Bar, Line, Pie } from 'react-chartjs-2'; // Chart.js components
+import { Card, Text } from '@nextui-org/react'; 
+import { Bar, Line, Pie } from 'react-chartjs-2'; 
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, LineElement, PointElement, ArcElement } from 'chart.js';
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -18,7 +16,6 @@ ChartJS.register(
 );
 
 const Analytics = () => {
-  // Sample data for Bar Chart
   const barData = {
     labels: ['January', 'February', 'March', 'April', 'May'],
     datasets: [
@@ -32,7 +29,6 @@ const Analytics = () => {
     ]
   };
 
-  // Sample data for Line Chart
   const lineData = {
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
     datasets: [
