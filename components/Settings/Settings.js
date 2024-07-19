@@ -1,88 +1,91 @@
-// Import necessary dependencies
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import styles from './Settings.module.css'; // Assuming you are using CSS modules
+import { Button, Select, Input, Form, Switch, notification } from '@nextui-org/react';
 
 const Settings = () => {
-  // State to manage user settings and loading state
-  const [settings, setSettings] = useState({
-    theme: 'light',
-    notifications: true,
-  });
-  const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState(null);
+  const [theme, setTheme] = useState('light');
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [apiEndpoint, setApiEndpoint] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch user settings from server on component mount
+    // Fetch current settings from an API or local storage on component mount
     const fetchSettings = async () => {
       try {
-        const response = await axios.get('/api/settings');
-        setSettings(response.data);
+        setIsLoading(true);
+        // Mock API call
+        const settings = await new Promise((resolve) =>
+          setTimeout(() => resolve({
+            theme: 'light',
+            notificationsEnabled: true,
+            apiEndpoint: 'https://api.example.com'
+          }), 1000)
+        );
+        setTheme(settings.theme);
+        setNotificationsEnabled(settings.notificationsEnabled);
+        setApiEndpoint(settings.apiEndpoint);
       } catch (error) {
-        console.error('Error fetching settings:', error);
+        notification.error({ message: 'Failed to fetch settings' });
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchSettings();
   }, []);
 
-  // Handle settings form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
+  const handleSave = async () => {
     try {
-      // Send updated settings to the server
-      await axios.put('/api/settings', settings);
-      setStatus('Settings updated successfully!');
+      setIsLoading(true);
+      // Mock API call
+      await new Promise((resolve) =>
+        setTimeout(() => resolve('Settings saved successfully'), 1000)
+      );
+      notification.success({ message: 'Settings saved successfully' });
     } catch (error) {
-      console.error('Error updating settings:', error);
-      setStatus('Error updating settings. Please try again.');
+      notification.error({ message: 'Failed to save settings' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setSettings(prevSettings => ({
-      ...prevSettings,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
   return (
-    <div className={styles.container}>
+    <div style={{ padding: '20px' }}>
       <h1>Settings</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.field}>
-            <label htmlFor="theme">Theme</label>
-            <select
-              id="theme"
-              name="theme"
-              value={settings.theme}
-              onChange={handleChange}
-            >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
-          <div className={styles.field}>
-            <label htmlFor="notifications">Enable Notifications</label>
-            <input
-              type="checkbox"
-              id="notifications"
-              name="notifications"
-              checked={settings.notifications}
-              onChange={handleChange}
-            />
-          </div>
-          <button type="submit" className={styles.button}>Save</button>
-          {status && <p className={styles.status}>{status}</p>}
-        </form>
-      )}
+      <Form>
+        <Form.Item label="Theme">
+          <Select
+            placeholder="Select theme"
+            value={theme}
+            onChange={(value) => setTheme(value)}
+          >
+            <Select.Option value="light">Light</Select.Option>
+            <Select.Option value="dark">Dark</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item label="Enable Notifications">
+          <Switch
+            checked={notificationsEnabled}
+            onChange={(e) => setNotificationsEnabled(e.target.checked)}
+          />
+        </Form.Item>
+
+        <Form.Item label="API Endpoint">
+          <Input
+            placeholder="Enter API endpoint"
+            value={apiEndpoint}
+            onChange={(e) => setApiEndpoint(e.target.value)}
+          />
+        </Form.Item>
+
+        <Button
+          onClick={handleSave}
+          disabled={isLoading}
+          color="primary"
+        >
+          {isLoading ? 'Saving...' : 'Save Settings'}
+        </Button>
+      </Form>
     </div>
   );
 };
