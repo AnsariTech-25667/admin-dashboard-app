@@ -8,11 +8,9 @@ const Settings = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch current settings from an API or local storage on component mount
     const fetchSettings = async () => {
       try {
         setIsLoading(true);
-        // Mock API call
         const settings = await new Promise((resolve) =>
           setTimeout(() => resolve({
             theme: 'light',
