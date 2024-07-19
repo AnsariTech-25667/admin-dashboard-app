@@ -1,76 +1,72 @@
-// Import necessary dependencies
 import React, { useState } from 'react';
-import axios from 'axios';
-import styles from './AddUserForm.module.css'; // Assuming you are using CSS modules
+import { Button, Input, Form, notification } from '@nextui-org/react';
 
-const AddUserForm = () => {
-  // State to manage form fields and submission status
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
-  const [status, setStatus] = useState(null);
+const AddUserForm = ({ onAddUser }) => {
+  const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    role: '',
+  });
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData({
+      ...userData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Construct user object
-    const newUser = {
-      name,
-      email,
-      role,
-    };
-
-    try {
-      // Send user data to the server
-      await axios.post('/api/users', newUser);
-      setStatus('User added successfully!');
-      setName('');
-      setEmail('');
-      setRole('');
-    } catch (error) {
-      console.error('Error adding user:', error);
-      setStatus('Error adding user. Please try again.');
+    if (!userData.name || !userData.email || !userData.role) {
+      notification.error({ message: 'All fields are required' });
+      return;
     }
+
+    // Pass user data to parent component
+    onAddUser(userData);
+
+    // Clear the form
+    setUserData({ name: '', email: '', role: '' });
+
+    // Notify user
+    notification.success({ message: 'User added successfully' });
   };
 
   return (
-    <div className={styles.container}>
+    <div style={{ padding: '20px' }}>
       <h1>Add User</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
+      <Form onSubmit={handleSubmit}>
+        <Form.Item label="Name">
+          <Input
+            name="name"
+            placeholder="Enter user name"
+            value={userData.name}
+            onChange={handleChange}
           />
-        </div>
-        <div className={styles.field}>
-          <label htmlFor="email">Email</label>
-          <input
+        </Form.Item>
+        <Form.Item label="Email">
+          <Input
+            name="email"
             type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            placeholder="Enter user email"
+            value={userData.email}
+            onChange={handleChange}
           />
-        </div>
-        <div className={styles.field}>
-          <label htmlFor="role">Role</label>
-          <input
-            type="text"
-            id="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            required
+        </Form.Item>
+        <Form.Item label="Role">
+          <Input
+            name="role"
+            placeholder="Enter user role"
+            value={userData.role}
+            onChange={handleChange}
           />
-        </div>
-        <button type="submit" className={styles.button}>Add User</button>
-      </form>
-      {status && <p className={styles.status}>{status}</p>}
+        </Form.Item>
+        <Button type="submit" color="primary">
+          Add User
+        </Button>
+      </Form>
     </div>
   );
 };
