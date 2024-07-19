@@ -1,21 +1,16 @@
-// Import necessary dependencies
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import styles from './DemoNotification.module.css'; // Assuming you are using CSS modules
-
-// Initialize toast notifications
+import styles from './DemoNotification.module.css'; 
 toast.configure();
 
 const DemoNotification = () => {
-  // State to manage notification messages and loading state
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    // Fetch existing notifications from server on component mount
     const fetchNotifications = async () => {
       setLoading(true);
       try {
@@ -31,7 +26,6 @@ const DemoNotification = () => {
     fetchNotifications();
   }, []);
 
-  // Function to handle notification sending
   const sendNotification = async () => {
     if (message.trim() === '') {
       toast.error('Message cannot be empty');
