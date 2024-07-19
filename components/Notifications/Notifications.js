@@ -1,15 +1,12 @@
-// Import necessary dependencies
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from './Notifications.module.css'; // Assuming you are using CSS modules
+import styles from './Notifications.module.css'; 
 
 const Notifications = () => {
-  // State to manage notifications and loading state
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch notifications from server on component mount
     const fetchNotifications = async () => {
       try {
         const response = await axios.get('/api/notifications');
