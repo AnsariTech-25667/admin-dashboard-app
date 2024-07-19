@@ -1,5 +1,4 @@
 
-// components/Dashboard/Dashboard.js
 import React from 'react';
 import { Card, Grid, Text, Progress } from '@nextui-org/react'; // Example of Next UI components
 import UserList from '../UserManagement/UserList';
@@ -14,7 +13,7 @@ const Dashboard = () => {
       <h1>Admin Dashboard</h1>
       
       <Grid.Container gap={2} justify="flex-start">
-        {/* Analytics Card */}
+        {}
         <Grid xs={12} sm={6} md={4}>
           <Card>
             <Card.Body>
@@ -24,7 +23,7 @@ const Dashboard = () => {
           </Card>
         </Grid>
 
-        {/* User Management Card */}
+        {}
         <Grid xs={12} sm={6} md={4}>
           <Card>
             <Card.Body>
