@@ -9,11 +9,9 @@ const TaskList = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch tasks from an API or local storage on component mount
     const fetchTasks = async () => {
       try {
         setIsLoading(true);
-        // Mock API call
         const fetchedTasks = await new Promise((resolve) =>
           setTimeout(() => resolve([
             { id: 1, title: 'Task 1', description: 'Description for Task 1' },
@@ -32,7 +30,6 @@ const TaskList = () => {
   }, []);
 
   const handleAddTask = () => {
-    // Add new task logic
     if (!newTask.title || !newTask.description) {
       notification.error({ message: 'Title and description are required' });
       return;
