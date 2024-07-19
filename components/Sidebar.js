@@ -1,4 +1,3 @@
-// components/Sidebar/Sidebar.js
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Nav, NavItem, NavLink } from '@nextui-org/react';
