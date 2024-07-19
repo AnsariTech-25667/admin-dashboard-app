@@ -1,4 +1,3 @@
-// api/API.js
 import axios from 'axios';
 
 const BASE_URL = 'https://api.example.com';
@@ -8,10 +7,8 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// Interceptors for request
 api.interceptors.request.use(
   config => {
-    // Add authorization header or any other modifications
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -23,22 +20,18 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptors for response
 api.interceptors.response.use(
   response => {
     return response;
   },
   error => {
-    // Handle response errors
     if (error.response && error.response.status === 401) {
-      // Handle unauthorized access
       console.log('Unauthorized access - maybe redirect to login');
     }
     return Promise.reject(error);
   }
 );
 
-// API request functions
 export const get = async (endpoint, params) => {
   try {
     const response = await api.get(endpoint, { params });
