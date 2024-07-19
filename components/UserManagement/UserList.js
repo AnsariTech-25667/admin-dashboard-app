@@ -1,7 +1,6 @@
 import React from 'react';
 import { Table, Button, Text } from '@nextui-org/react';
 
-// Example user data, replace with your actual data fetching logic
 const sampleUsers = [
   { id: 1, name: 'John Doe', email: 'john.doe@example.com', role: 'Admin' },
   { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com', role: 'User' },
