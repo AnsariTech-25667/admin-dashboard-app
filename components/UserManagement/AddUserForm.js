@@ -24,13 +24,10 @@ const AddUserForm = ({ onAddUser }) => {
       return;
     }
 
-    // Pass user data to parent component
     onAddUser(userData);
 
-    // Clear the form
     setUserData({ name: '', email: '', role: '' });
 
-    // Notify user
     notification.success({ message: 'User added successfully' });
   };
 
