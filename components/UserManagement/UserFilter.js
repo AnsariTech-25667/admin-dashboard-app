@@ -6,7 +6,6 @@ const UserFilter = ({ onFilter }) => {
 
   const handleChange = (e) => {
     setSearch(e.target.value);
-    // Debounce or immediate filtering can be handled here
   };
 
   const handleSubmit = () => {
